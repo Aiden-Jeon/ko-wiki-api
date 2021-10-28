@@ -54,6 +54,7 @@ def extract(
     else:
         names = [name]
     for name in names:
+        name = name.strip()
         page = wiki_ko.page(name)
         if not page.exists():
             print(f"{name} is not proper article name.")
@@ -77,15 +78,18 @@ def lines(
     total_length = 0
     for file_path in path.glob("*.txt"):
         sentences = []
-        with open(file_path, "r") as file_reader:
-            lines = file_reader.readlines()
-            sentence_list = map(kss.split_sentences, lines)
-            for sentence in sentence_list:
-                for line in sentence:
-                    if len(line) > line_length:
-                        sentences.append(line)
-        print(f"{file_path}:", len(sentences))
-        total_length += len(sentences)
+        try:
+            with open(file_path, "r") as file_reader:
+                lines = file_reader.readlines()
+                sentence_list = map(kss.split_sentences, lines)
+                for sentence in sentence_list:
+                    for line in sentence:
+                        if len(line) > line_length:
+                            sentences.append(line)
+            print(f"{file_path}:", len(sentences))
+            total_length += len(sentences)
+        except Exception as e:
+            print(f"{file_path} cannot get sentence due to error {e}.")
     print("Total sentence length:", total_length)
 
 
